@@ -1,0 +1,20 @@
+{
+  "name": "painel-financeiro",
+  "version": "1.0.0",
+  "description": "Central inteligente de monitoramento financeiro com AwesomeAPI, Telegram e Airtable.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "echo \"No tests configured yet\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.20.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}
