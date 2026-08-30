@@ -472,7 +472,7 @@
             <div class="market-card__meta">
               ${metaLines.join('')}
             </div>
-            <div class="market-card__message">${message.replace(/\n/g, '<br>')}</div>
+            <div class="market-card__message">${escapeHtml(message).replace(/\n/g, '<br>').replace(/&lt;b&gt;(.*?)&lt;\/b&gt;/g, '<strong>$1</strong>')}</div>
           </article>
         `;
       }

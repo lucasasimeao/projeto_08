@@ -22,7 +22,7 @@ function formatQuoteMessage(title, quote, extraLines = []) {
   return [
     title,
     `<b>Cotacao atual: ${quote.moeda} = R$ ${quote.valor.toFixed(4)}</b>`,
-    `Horario: ${new Date().toLocaleString('pt-BR')}`,
+    `Horario: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`,
     ...extraLines
   ].join('\n');
 }

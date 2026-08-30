@@ -8,7 +8,7 @@ Servidor Node.js que monitora a cotação USD/BRL em tempo real via [AwesomeAPI]
 - **Alerta via Telegram** — envia mensagem automática quando o dólar fica abaixo do piso definido
 - **Resumo diário** — boletim automático enviado no horário configurado
 - **Persistência no Airtable** — cada verificação salva data, moeda e valor na base
-- **Painel web** — interface para disparar operações e visualizar o status do mercado
+- **Painel web** — interface HTML/CSS customizada para disparar operações e visualizar o status do mercado
 
 ## Pré-requisitos
 
@@ -68,6 +68,37 @@ O painel estará disponível em `http://localhost:3000`.
 | POST   | `/verificar`     | Busca cotação, salva no Airtable e alerta no Telegram se abaixo do piso   |
 | POST   | `/resumo-diario` | Envia boletim completo no Telegram independente do status do mercado       |
 | POST   | `/limpar-tabela` | Remove todos os registros da tabela no Airtable                           |
+
+## Justificativa Teórica
+
+Este projeto aplica na prática o conceito de **orquestração de APIs** estudado na disciplina. A escolha de cada serviço foi deliberada:
+
+- **AwesomeAPI** — API pública gratuita, sem autenticação para leitura, ideal para consumo em ambiente acadêmico. Demonstra o padrão REST com `GET` e desserialização de JSON.
+- **Airtable** — solução No-Code que expõe um banco de dados relacional via API REST autenticada. Demonstra o padrão de persistência via `POST` com Bearer Token, sem necessidade de infraestrutura de banco de dados própria.
+- **Telegram Bot API** — canal de notificação assíncrona. Demonstra integração de webhooks/push e o uso de `parse_mode: HTML` para formatação de mensagens.
+
+A combinação dos três serviços demonstra o ciclo completo de um sistema de integração: **coleta → persistência → notificação**.
+
+## Segurança e LGPD
+
+### Proteção de credenciais
+
+- Todas as chaves, tokens e IDs estão **exclusivamente no arquivo `.env`**, que está listado no `.gitignore` e nunca é enviado ao repositório público.
+- O `.env.example` documenta as variáveis necessárias sem expor valores reais.
+- O servidor valida a presença de cada variável de ambiente antes de realizar qualquer chamada às APIs externas, falhando com mensagem de erro explícita se alguma estiver ausente.
+
+### Proteção contra XSS
+
+- A interface web aplica `escapeHtml()` em todos os dados externos antes de inseri-los no DOM via `innerHTML`, prevenindo ataques de Cross-Site Scripting (XSS). As únicas tags HTML permitidas (`<b>`) são reinseridas de forma controlada após o escape.
+
+### LGPD — Dados tratados
+
+| Dado | Origem | Finalidade | Armazenamento |
+|------|--------|------------|---------------|
+| Cotação USD/BRL | AwesomeAPI (pública) | Monitoramento de câmbio | Airtable (por operação) |
+| Data/hora da verificação | Sistema local | Auditoria e histórico | Airtable (por operação) |
+
+Nenhum dado pessoal de usuários é coletado ou processado. O projeto não se enquadra como controlador de dados pessoais conforme a Lei 13.709/2018 (LGPD).
 
 ## Estrutura do projeto
 
